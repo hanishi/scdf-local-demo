@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>demo-load-generator-app-dependencies</artifactId>
+  <version>1.0.0.BUILD-SNAPSHOT</version>
+
+  <parent>
+    <groupId>demo.stream.app</groupId>
+    <artifactId>stream-app-starters-dependencies</artifactId>
+    <version>1.0.0.BUILD-SNAPSHOT</version>
+    <relativePath>../../spring-cloud-stream-app-starters-dependencies</relativePath>
+  </parent>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>demo.stream.app</groupId>
+        <artifactId>spring-cloud-starter-stream-source-demo-load-generator</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+</project>

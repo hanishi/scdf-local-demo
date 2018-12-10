@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>demo.stream.app</groupId>
+    <artifactId>demo-load-generator-app-starters-build</artifactId>
+    <version>1.0.0.BUILD-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>spring-cloud-starter-stream-source-demo-load-generator</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>com.lmax</groupId>
+      <artifactId>disruptor</artifactId>
+      <version>3.4.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.18</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-stream-test-support</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-app-starter-doc-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>demo.stream.app.plugin</groupId>
+        <artifactId>spring-cloud-stream-app-maven-plugin</artifactId>
+        <version>${scs-app-maven-plugin.version}</version>
+        <configuration>
+          <generatedProjectHome>${session.executionRootDirectory}/apps</generatedProjectHome>
+          <generatedProjectVersion>${project.version}</generatedProjectVersion>
+          <bom>
+            <name>scs-bom</name>
+            <groupId>demo.stream.app</groupId>
+            <artifactId>demo-load-generator-app-dependencies</artifactId>
+            <version>${project.version}</version>
+          </bom>
+          <generatedApps>
+            <demo-load-generator-source/>
+          </generatedApps>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

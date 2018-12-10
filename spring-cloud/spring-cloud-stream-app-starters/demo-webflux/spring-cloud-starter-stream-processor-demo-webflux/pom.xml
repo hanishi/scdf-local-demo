@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>spring-cloud-starter-stream-processor-demo-webflux</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0.0.BUILD-SNAPSHOT</version>
+
+  <parent>
+    <groupId>demo.stream.app</groupId>
+    <artifactId>demo-webflux-app-starters-build</artifactId>
+    <version>1.0.0.BUILD-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.integration</groupId>
+      <artifactId>spring-integration-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webflux</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path-assert</artifactId>
+      <version>2.2.0</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-app-starter-doc-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>demo.stream.app.plugin</groupId>
+        <artifactId>spring-cloud-stream-app-maven-plugin</artifactId>
+        <version>${scs-app-maven-plugin.version}</version>
+        <configuration>
+          <generatedProjectHome>${session.executionRootDirectory}/apps</generatedProjectHome>
+          <generatedProjectVersion>${project.version}</generatedProjectVersion>
+          <bom>
+            <name>scs-bom</name>
+            <groupId>demo.stream.app</groupId>
+            <artifactId>demo-webflux-app-dependencies</artifactId>
+            <version>${project.version}</version>
+          </bom>
+          <generatedApps>
+            <demo-webflux-processor/>
+          </generatedApps>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
