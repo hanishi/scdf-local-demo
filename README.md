@@ -13,6 +13,19 @@ cloneしたディレクトで
 こちらの環境を使って、できたSpring Cloud Streamのアプリケーションをlocal版のSCDFで実行して試すことができます。
 SCDFは別途Vagrant環境にインストールしてください。
 
+現在、設定は以下のようになっています。
+
+```
+- name: dev
+  box: centos/7
+  ip: "192.168.0.11"
+  netmask: "255.255.255.0"
+  memory: 8192
+  cpus: 4
+  provision: "scripts/bootstrap.sh"
+  forwarded_ports: [80,80,2181,2181,9092,9092,3306,3306,9393,9393]
+```
+
 なお、`vm.synced_folder ".", "/vagrant", type: "nfs"`　で、開発環境(ホスト）の`dev`に配置されたファイルがVagrant環境に反映されるようになっています。この設定はmacOSでのみ確認しています。
 
 SCDFはこちらから！
