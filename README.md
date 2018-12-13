@@ -26,6 +26,12 @@ SCDFは別途Vagrant環境にインストールしてください。
   provision: "scripts/bootstrap.sh"
   forwarded_ports: [80,80,2181,2181,9092,9092,3306,3306,9393,9393]
 ```
+kafkaの起動は、こちらにあるスクリプトからでも行えます。
+`dev/scripts`
+start_zk
+と
+start_kafka
+を順番に実施します。start_zkが立ち上がったのを確認して、しばらくしてからkafkaを起動するようにしてください。
 
 なお、`vm.synced_folder ".", "/vagrant", type: "nfs"`　で、開発環境(ホスト）の`dev`に配置されたファイルがVagrant環境に反映されるようになっています。この設定はmacOSでのみ確認しています。
 
