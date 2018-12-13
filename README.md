@@ -1,7 +1,9 @@
 ### JSUG勉強会 2018年その7 Spring Cloud Data FlowとSpring Bootで実装するエンタープライズ統合パターン
 
 【第1部】Spring Bootで実装するエンタープライズ統合パターン
-　勉強会の資料と、デモで使ったアプリケーションです。
+　勉強会の資料`EIP.pptx`と、デモで使ったアプリケーションです。
+
+
 
 cloneしたディレクトで
 `mvn clean install -PgenerateApps`を実行すると、`apps`ディレクトリに、
