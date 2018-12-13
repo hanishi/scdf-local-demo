@@ -13,7 +13,8 @@ cloneしたディレクトで
 こちらの環境を使って、できたSpring Cloud Streamのアプリケーションをlocal版のSCDFで実行して試すことができます。
 SCDFは別途Vagrant環境にインストールしてください。
 
-現在、設定は以下のようになっています。
+現在、環境の設定は以下のようになっています。
+`dev/servers.yml`
 
 ```
 - name: dev
