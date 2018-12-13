@@ -15,6 +15,7 @@ SCDFは別途Vagrant環境にインストールしてください。
 
 なお、`vm.synced_folder ".", "/vagrant", type: "nfs"`　で、開発環境(ホスト）の`dev`に配置されたファイルがVagrant環境に反映されるようになっています。この設定はmacOSでのみ確認しています。
 
+SCDFはこちらから！
 ```
 wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-server-local/1.7.3.RELEASE/spring-cloud-dataflow-server-local-1.7.3.RELEASE.jar
 
