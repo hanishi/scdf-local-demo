@@ -13,5 +13,5 @@ SCDFは別途Vagrant環境にインストールしてください。
 
 この`maven`構成は、`spring-cloud-stream-app-maven-plugin`が、`spring-cloud-stream-app-starters`
 ディレクトリにある`demo-load-generator`と`demo-webflux`をそれぞれ、`Spring Boot`アプリケーションにしてくれます。
-このmaven pluginをカスタマイズすることで、全てのSpring Bootアプリケーションが必ず使う機能(Annotation)を自動生成される
-アプリケーションにつけることができます。
+このmaven pluginをカスタマイズすることで、全てのSpring Bootアプリケーションが必ず使う機能(Annotation)を、自動生成される
+Spring Bootアプリケーションにつけることができます。
