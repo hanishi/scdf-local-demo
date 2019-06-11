@@ -14,24 +14,24 @@ install_wget() {
   fi
 }
 
-install_openjdk8() {
+install_adoptopenjdk_11_hotspot() {
   value=$(rpm -qa | grep -c ^java)
   if [ $value -eq 0 ]; then
-    printLog "Installing java-1.8.0-openjdk-devel";
-    sudo yum --quiet -y install java-1.8.0-openjdk-devel
-    echo 'export JAVA_HOME=/usr/lib/jvm/java-1.8.0' | sudo tee -a /etc/profile.d/java.sh
-    echo 'export JRE_HOME=/usr/lib/jvm/java-1.8.0' | sudo tee -a /etc/profile.d/java.sh
+    printLog "Installing adoptopenjdk-11-hotspot-11";
+    sudo yum --quiet -y install adoptopenjdk-11-hotspot-11.0.3+7-1.$(uname -m)
+    echo 'export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot' | sudo tee -a /etc/profile.d/java.sh
+    echo 'export JRE_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot' | sudo tee -a /etc/profile.d/java.sh
     source /etc/profile
   fi
 }
 
 install_kafka() {
   FILE=/home/vagrant/kafka
-  if [ ! -f $FILE ]; then
+  if [[ ! -f ${FILE} ]]; then
     printLog "Installing Apache Kafka";
-    sudo wget -q https://archive.apache.org/dist/kafka/1.0.2/kafka_2.11-1.0.2.tgz
-    sudo mkdir -p /home/vagrant/kafka && sudo tar xvf kafka_2.11-1.0.2.tgz -C /home/vagrant/kafka --strip-components=1
-    rm -rf kafka_2.11-1.0.2.tgz
+    sudo wget -q https://archive.apache.org/dist/kafka/2.1.1/kafka_2.11-2.1.1.tgz
+    sudo mkdir -p /home/vagrant/kafka && sudo tar xvf kafka_2.11-2.1.1.tgz -C /home/vagrant/kafka --strip-components=1
+    rm -rf kafka_2.11-2.1.1.tgz
   fi
 }
 
@@ -83,9 +83,18 @@ gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
 gpgcheck=0
 EOF
 
+sudo tee "/etc/yum.repos.d/adoptopenjdk.repo" > /dev/null <<EOF
+[AdoptOpenJDK]
+name=AdoptOpenJDK
+baseurl=http://adoptopenjdk.jfrog.io/adoptopenjdk/rpm/centos/7/$(uname -m)
+enabled=1
+gpgcheck=1
+gpgkey=https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
+EOF
+
 install_wget
 install_dos2unix
-install_openjdk8
+install_adoptopenjdk_11_hotspot
 install_kafka
 install_mariadb
 

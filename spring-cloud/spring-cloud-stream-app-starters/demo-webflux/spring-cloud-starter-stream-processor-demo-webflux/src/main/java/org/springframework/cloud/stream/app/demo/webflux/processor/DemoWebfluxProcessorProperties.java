@@ -20,3 +20,4 @@ public class DemoWebfluxProcessorProperties {
     @NotNull
     private URI targetUri;
 }
+

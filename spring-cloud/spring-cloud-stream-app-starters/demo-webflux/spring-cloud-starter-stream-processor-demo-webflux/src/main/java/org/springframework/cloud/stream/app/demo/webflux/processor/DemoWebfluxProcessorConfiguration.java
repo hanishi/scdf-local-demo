@@ -4,6 +4,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.integration.dsl.IntegrationFlow;
+import org.springframework.integration.dsl.IntegrationFlows;
+import org.springframework.integration.dsl.MessageChannels;
+import org.springframework.integration.webflux.dsl.WebFlux;
+import org.springframework.messaging.MessageHeaders;
+
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Objects;
@@ -14,20 +27,6 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Processor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.integration.dsl.IntegrationFlow;
-import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.integration.dsl.channel.MessageChannels;
-import org.springframework.integration.webflux.dsl.WebFlux;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageHandlingException;
-import org.springframework.messaging.MessageHeaders;
 
 @Configuration
 @EnableBinding(Processor.class)
@@ -40,10 +39,10 @@ public class DemoWebfluxProcessorConfiguration {
     private static final String HEADER_ITEMS = "items";
 
     @Bean
-    public IntegrationFlow enrichContent(ObjectMapper objectMapper) {
+    public IntegrationFlow enrichContent(ObjectMapper objectMapper, DemoWebfluxProcessorProperties properties) {
 
         return IntegrationFlows.from(Processor.INPUT)
-                .<byte[], JsonNode>transform(p-> {
+                .<byte[], JsonNode>transform(p -> {
                     //　この部分は、Spring IntegrationのJava DSLを使った場合に必要、Spring Integration 5.1だと必要ない。
                     try {
                         return objectMapper.readTree(p);
@@ -87,31 +86,11 @@ public class DemoWebfluxProcessorConfiguration {
                             objectNode.put("id", id)
                                     .set("items", items);
                             return objectNode;
-                        })).channel("orderChannel").get();
-    }
-
-    @Bean
-    public IntegrationFlow httpOutboundGateway(DemoWebfluxProcessorProperties properties) {
-
-        return IntegrationFlows.from("orderChannel")
-                .enrichHeaders(h -> h.header(MessageHeaders.CONTENT_TYPE, "application/json"))
+                        })).enrichHeaders(h -> h.header(MessageHeaders.CONTENT_TYPE, "application/json"))
                 .handle(WebFlux.<String>outboundGateway(m -> properties.getTargetUri()).httpMethod(HttpMethod.POST)
                         .expectedResponseType(JsonNode.class))
                 .channel(Processor.OUTPUT).get();
     }
-
-    @Bean
-    public IntegrationFlow failedMessageFlow(MessageChannel errorChannel, ObjectMapper objectMapper) {
-        return IntegrationFlows.from(errorChannel)
-                .<MessageHandlingException>handle((p, h) -> {
-                    Object payload = Objects.requireNonNull(p.getFailedMessage()).getPayload();
-                    ObjectNode objectNode = objectMapper.createObjectNode();
-                    objectNode.put("error", p.getMostSpecificCause().getMessage());
-                    objectNode.put("data", payload.toString());
-                    return objectNode.toString();
-                }).channel(Processor.OUTPUT).get();
-    }
-
 
     public static class ArrayNodeCollector implements Collector<JsonNode, ArrayNode, ArrayNode> {
 
