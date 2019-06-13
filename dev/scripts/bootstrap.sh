@@ -49,14 +49,6 @@ install_mariadb() {
   fi
 }
 
-install_dos2unix() {
-  value=$(rpm -qa | grep -c ^dos2unix)
-  if [ $value -eq 0 ]; then
-    printLog "Installing dos2unix";
-    sudo yum --quiet -y install dos2unix
-  fi
-}
-
 node_ip=$1
 
 sudo tee "/vagrant/scripts/common.sh" > /dev/null <<EOF
@@ -93,7 +85,6 @@ gpgkey=https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public
 EOF
 
 install_wget
-install_dos2unix
 install_adoptopenjdk_11_hotspot
 install_kafka
 install_mariadb

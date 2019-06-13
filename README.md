@@ -1,20 +1,13 @@
-### JSUG勉強会 2018年その7 Spring Cloud Data FlowとSpring Bootで実装するエンタープライズ統合パターン
+### Spring Cloud Data Flow Scaffolding and Kafka(for Binder) in a "box"
 
-【第1部】Spring Bootで実装するエンタープライズ統合パターン
-　勉強会の資料`EIP.pptx`と、デモで使ったアプリケーションです。
+1. Running `mvn clean install -PgenerateApps` will generate the binder specific source code for your application assembled from 
+`spring-cloud/spring-cloud-stream-app-starters/your_app` in the `apps` directory created upon successful installation.
+Each application will have `kafka-11` suffix appended to its artifact name.
 
-
-
-cloneしたディレクトで
-`mvn clean install -PgenerateApps`を実行すると、`apps`ディレクトリに、
-デモで使った`Source`と`Processor`のアプリケーションがbuildされます。
-
-`dev`はVagrantで起動するLinux環境で、vagrant upでkafkaとmariadbがすぐに使える状態になります。
-こちらの環境を使って、できたSpring Cloud Streamのアプリケーションをlocal版のSCDFで実行して試すことができます。
-SCDFは別途Vagrant環境にインストールしてください。
-
-現在、環境の設定は以下のようになっています。
-`dev/servers.yml`
+2. The _dev_ directory includes Vagrantfile for setting up a single broker apache-kafka environment useful for 
+local SCDF deployment during development phase. By default, executing `vagrant up` 
+installs additional software as defined in the `dev/scripts/bootstrap.sh` 
+Modify the `dev/servers.yml` as needed depending on your host environment.
 
 ```
 - name: dev
@@ -26,24 +19,26 @@ SCDFは別途Vagrant環境にインストールしてください。
   provision: "scripts/bootstrap.sh"
   forwarded_ports: [80,80,2181,2181,9092,9092,3306,3306,9393,9393]
 ```
-kafkaの起動は、こちらにあるスクリプトからでも行えます。
-`dev/scripts`
-start_zk
-と
-start_kafka
-を順番に実施します。start_zkが立ち上がったのを確認して、しばらくしてからkafkaを起動するようにしてください。
 
-なお、`vm.synced_folder ".", "/vagrant", type: "nfs"`　で、開発環境(ホスト）の`dev`に配置されたファイルがVagrant環境に反映されるようになっています。この設定はmacOSでのみ確認しています。
+3. `vagrant ssh` into the virtual machine. 
+Alternatively, the same can be achieved by `ssh -i .vagrant/machines/dev/virtualbox/private_key vagrant@192.168.0.11`
+Within the virtual machine environment download the Spring Cloud Data Flow Server and shell.   
 
-SCDFはこちらから！
-```
-wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-server-local/1.7.3.RELEASE/spring-cloud-dataflow-server-local-1.7.3.RELEASE.jar
+`wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-server/2.1.0.RELEASE/spring-cloud-dataflow-server-2.1.0.RELEASE.jar
+wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-shell/2.1.0.RELEASE/spring-cloud-dataflow-shell-2.1.0.RELEASE.jar
+`
+Download Skipper by running the following 
 
-wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-dataflow-shell/1.7.3.RELEASE/spring-cloud-dataflow-shell-1.7.3.RELEASE.jar
-```
+`wget https://repo.spring.io/release/org/springframework/cloud/spring-cloud-skipper-server/2.0.2.RELEASE/spring-cloud-skipper-server-2.0.2.RELEASE.jar`
 
-この`maven`構成は、`spring-cloud-stream-app-maven-plugin`が、`spring-cloud-stream-app-starters`
-ディレクトリにある`demo-load-generator`と`demo-webflux`をそれぞれ、`Spring Boot`アプリケーションにしてくれます。
-このmaven pluginをカスタマイズすることで、全ての`Spring Boot`アプリケーションが必ず使う機能(Annotation)を、自動生成される
-`Spring Boot`アプリケーションにつけることができます。
+
+4. go to `dev/scripts` and run `start_zk` followed by `start_kafka`
+Confirm that zookeeper is started before you start kafka by `jps`
+
+When you move files to `dev` it will be available in `/vagrant/` and this is how you place your apps into the virtual machine.
+
+launch the `spring-cloud-skipper-server-2.0.2.RELEASE.jar` followed by `spring-cloud-dataflow-server-2.1.0.RELEASE.jar` 
+and `spring-cloud-dataflow-shell-2.1.0.RELEASE.jar`
+
+5. Test your app with SCDF.
 
